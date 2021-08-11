@@ -2,7 +2,7 @@
 
 namespace Gets\Freshservice\Exceptions;
 
-class TicketException extends \Exception
+class TicketException extends FreshserviceException
 {
 
 }

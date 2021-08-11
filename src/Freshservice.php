@@ -20,17 +20,14 @@ use GuzzleHttp\Exception\RequestException;
 
 class Freshservice
 {
-    private $apiKey;
-
     /* @var GuzzleHttpClient $httpClient */
     private $httpClient;
 
     public function __construct(string $domain, string $apiKey)
     {
-        $this->apiKey = $apiKey;
-
         $this->httpClient = new GuzzleHttpClient([
-            'base_uri' => $domain
+            'base_uri' => $domain,
+            'auth'     => [$apiKey, 'X'],
         ]);
     }
 
@@ -56,7 +53,6 @@ class Freshservice
                     ];
                 }
                 $response = $this->httpClient->post('/api/v2/tickets', [
-                    'auth'      => [$this->apiKey, 'X'],
                     //'body' => $ticket->toJson(),
                     'headers'   => [
                         'Accept' => 'application/json',
@@ -65,7 +61,6 @@ class Freshservice
                 ])->getBody()->getContents();
             } else {
                 $response = $this->httpClient->post('/api/v2/tickets', [
-                    'auth'    => [$this->apiKey, 'X'],
                     'body'    => $ticket->toJson(),
                     'headers' => [
                         'Content-Type' => 'application/json',
@@ -97,7 +92,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/tickets/$ticketId?include=conversations,requester", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',
@@ -131,7 +125,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/tickets?email=$email", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',
@@ -168,7 +161,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->post('/api/v2/departments', [
-                'auth'    => [$this->apiKey, 'X'],
                 'body'    => $department->toJson(),
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -199,7 +191,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/departments?page=$page", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',
@@ -238,7 +229,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/departments/$departmentId", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',
@@ -270,7 +260,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/departments?query=\"name:'$departmentName'\"", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',
@@ -306,7 +295,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->post('/api/v2/requesters', [
-                'auth'    => [$this->apiKey, 'X'],
                 'body'    => $requester->toJson(),
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -337,7 +325,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->put("/api/v2/requesters/$requesterId", [
-                'auth'    => [$this->apiKey, 'X'],
                 'body'    => $requester->toJson(),
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -368,7 +355,6 @@ class Freshservice
     {
         try {
             $response = $this->httpClient->get("/api/v2/requesters?query=\"primary_email:'$requesterEmail'\"", [
-                'auth'    => [$this->apiKey, 'X'],
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept'       => 'application/json',

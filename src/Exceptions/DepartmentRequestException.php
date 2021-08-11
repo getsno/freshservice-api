@@ -2,7 +2,7 @@
 
 namespace Gets\Freshservice\Exceptions;
 
-class DepartmentRequestException extends \Exception
+class DepartmentRequestException extends FreshserviceException
 {
 
 }

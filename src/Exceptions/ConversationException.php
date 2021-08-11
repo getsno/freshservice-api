@@ -2,7 +2,7 @@
 
 namespace Gets\Freshservice\Exceptions;
 
-class ConversationException extends \Exception
+class ConversationException extends FreshserviceException
 {
 
 }
