@@ -2,9 +2,9 @@
 
 namespace Gets\Freshservice;
 
-use Gets\Freshservice\Classes\Department;
-use Gets\Freshservice\Classes\Requester;
-use Gets\Freshservice\Classes\Ticket;
+use Gets\Freshservice\Entities\Department;
+use Gets\Freshservice\Entities\Requester;
+use Gets\Freshservice\Entities\Ticket;
 use Gets\Freshservice\Exceptions\DepartmentException;
 use Gets\Freshservice\Exceptions\DepartmentRequestException;
 use Gets\Freshservice\Exceptions\FreshserviceException;

@@ -1,21 +1,21 @@
 <?php
 
-namespace Gets\Freshservice\Classes;
+namespace Gets\Freshservice\Entities;
 
 use Gets\Freshservice\Exceptions\TicketException;
 
 class Ticket
 {
-    public const SOURCE_TYPE_EMAIL           = 1;
-    public const SOURCE_TYPE_PORTAL          = 2;
-    public const SOURCE_TYPE_PHONE           = 3;
-    public const SOURCE_TYPE_CHAT            = 4;
+    public const SOURCE_TYPE_EMAIL = 1;
+    public const SOURCE_TYPE_PORTAL = 2;
+    public const SOURCE_TYPE_PHONE = 3;
+    public const SOURCE_TYPE_CHAT = 4;
     public const SOURCE_TYPE_FEEDBACK_WIDGET = 5;
-    public const SOURCE_TYPE_YAMMER          = 6;
-    public const SOURCE_TYPE_AWS_CLOUDWATCH  = 7;
-    public const SOURCE_TYPE_PAGERDUTY       = 8;
-    public const SOURCE_TYPE_WALKUP          = 9;
-    public const SOURCE_TYPE_SLACK           = 10;
+    public const SOURCE_TYPE_YAMMER = 6;
+    public const SOURCE_TYPE_AWS_CLOUDWATCH = 7;
+    public const SOURCE_TYPE_PAGERDUTY = 8;
+    public const SOURCE_TYPE_WALKUP = 9;
+    public const SOURCE_TYPE_SLACK = 10;
 
     public static function getAvailableSourceTypes(): array
     {
@@ -33,10 +33,10 @@ class Ticket
         ];
     }
 
-    public const STATUS_OPEN     = 2;
-    public const STATUS_PENDING  = 3;
+    public const STATUS_OPEN = 2;
+    public const STATUS_PENDING = 3;
     public const STATUS_RESOLVED = 4;
-    public const STATUS_CLOSED   = 5;
+    public const STATUS_CLOSED = 5;
 
     public static function getAvailableStatuses(): array
     {
@@ -48,9 +48,9 @@ class Ticket
         ];
     }
 
-    public const PRIORITY_LOW    = 1;
+    public const PRIORITY_LOW = 1;
     public const PRIORITY_MEDIUM = 2;
-    public const PRIORITY_HIGH   = 3;
+    public const PRIORITY_HIGH = 3;
     public const PRIORITY_URGENT = 4;
 
     public static function getAvailablePriorities(): array
@@ -65,38 +65,72 @@ class Ticket
 
     // Unique ID of the ticket.
     private $id;
-    // User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email.
+
+    /*
+     * User ID of the requester.
+     * For existing contacts, the requester_id can be passed instead of the requester's email.
+     */
     private $requesterId;
-    // Email address of the requester. If no contact exists with this email address in Freshservice, it will be added as a new contact.
+
+    /*
+     * Email address of the requester.
+     * If no contact exists with this email address in Freshservice, it will be added as a new contact.
+     */
     private $email;
-    // Phone number of the requester. If no contact exists with this phone number in Freshservice, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory.
+
+    /*
+    * Phone number of the requester.
+    * If no contact exists with this phone number in Freshservice, it will be added as a new contact.
+    * If the phone number is set and the email address is not, then the name attribute is mandatory.
+    */
     private $phone;
+
     // Status of the ticket.
     private $status;
+
     // Priority of the ticket.
     private $priority;
+
     // The channel through which the ticket was created. The default value is 2.
     private $source;
-    // Helps categorize the ticket according to the different kinds of issues your support team deals with. The default Value is incident. * As of now, API v2 supports only type ‘incident’
+
+    /*
+     * Helps categorize the ticket according to the different kinds of issues your support team deals with.
+     * The default Value is incident. * As of now, API v2 supports only type ‘incident’
+     */
     private $type;
+
     // Subject of the ticket. The default value is null.
     private $subject;
+
     // HTML content of the ticket.
     private $description;
+
     // Content of the ticket in plain text.
     private $descriptionText;
+
     // Department ID of the requester.
     private $departmentId;
+
     //Key value pairs containing the names and values of custom fields.
     private $customFields = [];
-    // Set to true if the ticket has been deleted/trashed. Deleted tickets will not be displayed in any views except the "deleted" filter.
+
+
+    /*
+     * Set to true if the ticket has been deleted/trashed.
+     * Deleted tickets will not be displayed in any views except the "deleted" filter.
+     */
     private $deleted = false;
+
     // Ticket creation timestamp.
     private $createdAt;
+
     // Ticket updated timestamp.
     private $updatedAt;
-    // Ticket attachments. The total size of these attachments cannot exceed 15MB.
+
+    // Ticket attachments. The total size of these attachments cannot exceed 15 MB
     private $attachments = [];
+
     private $conversations = [];
 
     public function getId(): int

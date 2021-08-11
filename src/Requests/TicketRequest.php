@@ -2,7 +2,7 @@
 
 namespace Gets\Freshservice\Requests;
 
-use Gets\Freshservice\Classes\Ticket;
+use Gets\Freshservice\Entities\Ticket;
 use Gets\Freshservice\Exceptions\TicketRequestException;
 
 class TicketRequest

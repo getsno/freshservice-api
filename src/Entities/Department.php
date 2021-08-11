@@ -1,20 +1,29 @@
 <?php
 
-namespace Gets\Freshservice\Classes;
+namespace Gets\Freshservice\Entities;
 
 use Gets\Freshservice\Exceptions\DepartmentException;
 
 class Department
 {
-    private $id; // Unique identifier of the department
-    private $name; // Name of the department
-    private $description; // Description about the department
-    private $headUserId; // Unique identifier of the agent or requester who serves as the head of the department
-    private $primeUserId; // Unique identifier of the agent or requester who serves as the prime user of the department
-    private $domains; // Email domains associated with the department
-    private $customFields; // Custom fields that are associated with departments
-    private $createdAt; // Timestamp at which the department was created
-    private $updatedAt; // Timestamp at which the department was last modified
+    // Unique identifier of the department
+    private $id;
+    // Name of the department
+    private $name;
+    // Description about the department
+    private $description;
+    // Unique identifier of the agent or requester who serves as the head of the department
+    private $headUserId;
+    // Unique identifier of the agent or requester who serves as the prime user of the department
+    private $primeUserId;
+    // Email domains associated with the department
+    private $domains;
+    // Custom fields that are associated with departments
+    private $customFields;
+    // Timestamp at which the department was created
+    private $createdAt;
+    // Timestamp at which the department was last modified
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -147,7 +156,10 @@ class Department
         return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
     }
 
-    public static function fillFromObject($object): self
+    /**
+     * @throws DepartmentException
+     */
+    public static function fillFromObject(object $object): self
     {
         try {
             $ticket = new self();

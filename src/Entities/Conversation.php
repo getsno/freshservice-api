@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Gets\Freshservice\Classes;
-
+namespace Gets\Freshservice\Entities;
 
 use Gets\Freshservice\Exceptions\ConversationException;
 
