@@ -59,7 +59,8 @@ class Freshservice
 
                 $response = $this->httpClient->post('/api/v2/tickets', [
                     'headers'   => [
-                        'Accept' => 'application/json',
+                        'Content-Type' => 'multipart/form-data',
+                        'Accept'       => 'application/json',
                     ],
                     'multipart' => $multipart,
                 ])->getBody()->getContents();
