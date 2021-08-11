@@ -28,6 +28,10 @@ class Freshservice
         $this->httpClient = new GuzzleHttpClient([
             'base_uri' => $domain,
             'auth'     => [$apiKey, 'X'],
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ],
         ]);
     }
 
@@ -52,8 +56,8 @@ class Freshservice
                         'contents' => file_get_contents($attachment['tmp_name']),
                     ];
                 }
+
                 $response = $this->httpClient->post('/api/v2/tickets', [
-                    //'body' => $ticket->toJson(),
                     'headers'   => [
                         'Accept' => 'application/json',
                     ],
@@ -62,10 +66,6 @@ class Freshservice
             } else {
                 $response = $this->httpClient->post('/api/v2/tickets', [
                     'body'    => $ticket->toJson(),
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept'       => 'application/json',
-                    ],
                 ])->getBody()->getContents();
             }
 
@@ -91,12 +91,9 @@ class Freshservice
     public function getTicketById(int $ticketId): ?Ticket
     {
         try {
-            $response = $this->httpClient->get("/api/v2/tickets/$ticketId?include=conversations,requester", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/tickets/$ticketId?include=conversations,requester")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
@@ -124,12 +121,9 @@ class Freshservice
     public function getTicketsByEmail(string $email): array
     {
         try {
-            $response = $this->httpClient->get("/api/v2/tickets?email=$email", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/tickets?email=$email")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
@@ -162,10 +156,6 @@ class Freshservice
         try {
             $response = $this->httpClient->post('/api/v2/departments', [
                 'body'    => $department->toJson(),
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
             ])->getBody()->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
@@ -190,12 +180,9 @@ class Freshservice
     public function getDepartments(int $page = 1): array
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments?page=$page", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/departments?page=$page")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
@@ -228,12 +215,9 @@ class Freshservice
     public function getDepartmentById(int $departmentId): ?Department
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments/$departmentId", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/departments/$departmentId")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
@@ -259,12 +243,9 @@ class Freshservice
     public function getDepartmentByName(string $departmentName): ?Department
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments?query=\"name:'$departmentName'\"", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/departments?query=\"name:'$departmentName'\"")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
@@ -296,10 +277,6 @@ class Freshservice
         try {
             $response = $this->httpClient->post('/api/v2/requesters', [
                 'body'    => $requester->toJson(),
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
             ])->getBody()->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
@@ -326,10 +303,6 @@ class Freshservice
         try {
             $response = $this->httpClient->put("/api/v2/requesters/$requesterId", [
                 'body'    => $requester->toJson(),
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
             ])->getBody()->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
@@ -354,12 +327,9 @@ class Freshservice
     public function getRequesterByEmail(string $requesterEmail): ?Requester
     {
         try {
-            $response = $this->httpClient->get("/api/v2/requesters?query=\"primary_email:'$requesterEmail'\"", [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept'       => 'application/json',
-                ],
-            ])->getBody()->getContents();
+            $response = $this->httpClient->get("/api/v2/requesters?query=\"primary_email:'$requesterEmail'\"")
+                ->getBody()
+                ->getContents();
 
             $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
 
