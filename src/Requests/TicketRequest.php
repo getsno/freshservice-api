@@ -7,24 +7,52 @@ use Gets\Freshservice\Exceptions\TicketRequestException;
 
 class TicketRequest
 {
-    private $requester_id; // User ID of the requester. For existing contacts, the requester_id can be passed instead of the requester's email.
-    private $name; // Name of the requester
-    private $email; // Email address of the requester. If no contact exists with this email address in Freshservice, it will be added as a new contact.
-    private $phone; // Phone number of the requester. If no contact exists with this phone number in Freshservice, it will be added as a new contact. If the phone number is set and the email address is not, then the name attribute is mandatory.
+    /*
+     * User ID of the requester.
+     * For existing contacts, the requester_id can be passed instead of the requester's email.
+     */
+    private $requesterId;
 
-    private $status; // Status of the ticket.
-    private $priority; // Priority of the ticket.
-    private $source; // The channel through which the ticket was created. The default value is 2.
+    // Name of the requester
+    private $name;
 
-    private $subject; // Subject of the ticket. The default value is null.
-    private $description; // HTML content of the ticket.
-    private $departmentId; // Department ID of the requester.
+    /*
+     * Email address of the requester.
+     * If no contact exists with this email address in Freshservice, it will be added as a new contact.
+     */
+    private $email;
 
-    private $attachments = []; // Ticket attachments. The total size of these attachments cannot exceed 15MB.
+    /*
+     * Phone number of the requester.
+     * If no contact exists with this phone number in Freshservice, it will be added as a new contact.
+     * If the phone number is set and the email address is not, then the name attribute is mandatory.
+     */
+    private $phone;
+
+    // Status of the ticket.
+    private $status;
+
+    // Priority of the ticket.
+    private $priority;
+
+    // The channel through which the ticket was created. The default value is 2.
+    private $source;
+
+    // Subject of the ticket. The default value is null.
+    private $subject;
+
+    // HTML content of the ticket.
+    private $description;
+
+    // Department ID of the requester.
+    private $departmentId;
+
+    // Ticket attachments. The total size of these attachments cannot exceed 15 MB.
+    private $attachments = [];
 
     public function getRequesterId(): ?int
     {
-        return $this->requester_id;
+        return $this->requesterId;
     }
 
     public function getName(): ?string
@@ -77,9 +105,9 @@ class TicketRequest
         return $this->attachments;
     }
 
-    public function setRequesterId(?int $requester_id): self
+    public function setRequesterId(?int $requesterId): self
     {
-        $this->requester_id = $requester_id;
+        $this->requesterId = $requesterId;
 
         return $this;
     }
@@ -185,7 +213,7 @@ class TicketRequest
      */
     public function checkRequest(): void
     {
-        if (empty($this->requester_id) && empty($this->email) && (empty($this->phone) && empty($this->name))) {
+        if (empty($this->requesterId) && empty($this->email) && (empty($this->phone) && empty($this->name))) {
             throw new TicketRequestException('Requester fields error');
         }
 
@@ -209,7 +237,7 @@ class TicketRequest
             'priority'      => $this->getPriority(),
             'source'        => $this->getSource(),
             'subject'       => $this->getSubject(),
-            'description'   => $this->getDescription()
+            'description'   => $this->getDescription(),
         ];
 
         if ($this->getRequesterId() !== null) {

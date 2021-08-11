@@ -115,7 +115,6 @@ class Ticket
     //Key value pairs containing the names and values of custom fields.
     private $customFields = [];
 
-
     /*
      * Set to true if the ticket has been deleted/trashed.
      * Deleted tickets will not be displayed in any views except the "deleted" filter.

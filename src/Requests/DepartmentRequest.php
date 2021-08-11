@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Gets\Freshservice\Requests;
 
 
@@ -8,19 +7,12 @@ use Gets\Freshservice\Exceptions\DepartmentRequestException;
 
 class DepartmentRequest
 {
-    // Unique identifier of the department
     private $id;
-    // Name of the department
     private $name;
-    // Description about the department
     private $description;
-    // Unique identifier of the agent or requester who serves as the head of the department
     private $headUserId;
-    // Unique identifier of the agent or requester who serves as the prime user of the department
     private $primeUserId;
-    // Email domains associated with the department
     private $domains;
-    // Custom fields that are associated with departments
     private $customFields;
 
     public function getId(): ?int
