@@ -28,6 +28,7 @@ class TicketRequest
     private $subject;
     private $description;
     private $departmentId;
+    private $urgency;
 
     // The total size of these attachments cannot exceed 15 MB.
     private $attachments = [];
@@ -80,6 +81,11 @@ class TicketRequest
     public function getDepartmentId(): ?int
     {
         return $this->departmentId;
+    }
+
+    public function getUrgency(): ?int
+    {
+        return $this->urgency;
     }
 
     public function getAttachments(): array
@@ -174,6 +180,13 @@ class TicketRequest
     public function setDepartmentId(?int $departmentId): self
     {
         $this->departmentId = $departmentId;
+
+        return $this;
+    }
+
+    public function setUrgency(int $urgency): self
+    {
+        $this->urgency = $urgency;
 
         return $this;
     }
