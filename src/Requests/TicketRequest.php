@@ -7,13 +7,7 @@ use Gets\Freshservice\Exceptions\TicketRequestException;
 
 class TicketRequest
 {
-    /*
-     * User ID of the requester.
-     * For existing contacts, the requester_id can be passed instead of the requester's email.
-     */
     private $requesterId;
-
-    // Name of the requester
     private $name;
 
     /*
@@ -28,26 +22,14 @@ class TicketRequest
      * If the phone number is set and the email address is not, then the name attribute is mandatory.
      */
     private $phone;
-
-    // Status of the ticket.
     private $status;
-
-    // Priority of the ticket.
     private $priority;
-
-    // The channel through which the ticket was created. The default value is 2.
     private $source;
-
-    // Subject of the ticket. The default value is null.
     private $subject;
-
-    // HTML content of the ticket.
     private $description;
-
-    // Department ID of the requester.
     private $departmentId;
 
-    // Ticket attachments. The total size of these attachments cannot exceed 15 MB.
+    // The total size of these attachments cannot exceed 15 MB.
     private $attachments = [];
 
     public function getRequesterId(): ?int
@@ -214,11 +196,11 @@ class TicketRequest
     public function checkRequest(): void
     {
         if (empty($this->requesterId) && empty($this->email) && (empty($this->phone) && empty($this->name))) {
-            throw new TicketRequestException('Requester fields error');
+            throw new TicketRequestException('Requester fields are missing');
         }
 
         if (empty($this->status) || empty($this->priority) || empty($this->source)) {
-            throw new TicketRequestException('mandatory fields error');
+            throw new TicketRequestException('Mandatory fields are missing');
         }
     }
 
@@ -249,14 +231,5 @@ class TicketRequest
         }
 
         return $requester;
-    }
-
-    /**
-     * @throws \JsonException
-     * @throws TicketRequestException
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
     }
 }

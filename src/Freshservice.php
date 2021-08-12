@@ -2,6 +2,7 @@
 
 namespace Gets\Freshservice;
 
+use JsonException;
 use Gets\Freshservice\Entities\Department;
 use Gets\Freshservice\Entities\Requester;
 use Gets\Freshservice\Entities\Ticket;
@@ -57,32 +58,30 @@ class Freshservice
                     ];
                 }
 
-                $response = $this->httpClient->post('/api/v2/tickets', [
-                    'headers'   => [
-                        'Content-Type' => 'multipart/form-data',
-                        'Accept'       => 'application/json',
-                    ],
+                $responseJson = $this->httpClient->post('/api/v2/tickets', [
                     'multipart' => $multipart,
                 ])->getBody()->getContents();
             } else {
-                $response = $this->httpClient->post('/api/v2/tickets', [
-                    'body'    => $ticket->toJson(),
+                $responseJson = $this->httpClient->post('/api/v2/tickets', [
+                    'json' => $ticket->toArray(),
                 ])->getBody()->getContents();
             }
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
-
-            if (!isset($convertedResponse->ticket)) {
-                throw new FreshserviceException('Wrong json response');
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->ticket)) {
+                throw new FreshserviceException('Ticket is missing in response');
             }
 
-            return Ticket::fillFromObject($convertedResponse->ticket);
+            return Ticket::fillFromObject($response->ticket);
+        } catch (TicketException | TicketRequestException $e) {
+            throw new FreshserviceException($e->getMessage());
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $responseBody = $response->getBody()->getContents();
+
             throw new FreshserviceException($responseBody);
-        } catch (TicketException | TicketRequestException $e) {
-            throw new FreshserviceException($e->getMessage());
+        } catch (JsonException $e) {
+            throw new FreshserviceException('Failed to parse JSON response');
         }
     }
 
@@ -92,17 +91,16 @@ class Freshservice
     public function getTicketById(int $ticketId): ?Ticket
     {
         try {
-            $response = $this->httpClient->get("/api/v2/tickets/$ticketId?include=conversations,requester")
+            $responseJson = $this->httpClient->get("/api/v2/tickets/$ticketId?include=conversations,requester")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
-
-            if (!isset($convertedResponse->ticket)) {
-                throw new FreshserviceException('Wrong json response');
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->ticket)) {
+                throw new FreshserviceException('Wrong JSON response');
             }
 
-            return Ticket::fillFromObject($convertedResponse->ticket);
+            return Ticket::fillFromObject($response->ticket);
         } catch (RequestException $e) {
             if ($e->getCode() !== 404) {
                 $response = $e->getResponse();
@@ -111,7 +109,7 @@ class Freshservice
             }
 
             return null;
-        } catch (TicketException | \JsonException $e) {
+        } catch (TicketException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -122,18 +120,17 @@ class Freshservice
     public function getTicketsByEmail(string $email): array
     {
         try {
-            $response = $this->httpClient->get("/api/v2/tickets?email=$email")
+            $responseJson = $this->httpClient->get("/api/v2/tickets?email=$email")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
-
-            if (!isset($convertedResponse->tickets)) {
-                throw new FreshserviceException('Wrong json response');
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->tickets)) {
+                throw new FreshserviceException('Tickets are missing in response');
             }
 
             $tickets = [];
-            foreach ($convertedResponse->tickets as $ticket) {
+            foreach ($response->tickets as $ticket) {
                 $tickets[] = Ticket::fillFromObject($ticket);
             }
 
@@ -144,7 +141,7 @@ class Freshservice
             }
 
             return [];
-        } catch (TicketException | \JsonException $e) {
+        } catch (TicketException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -155,22 +152,21 @@ class Freshservice
     public function createDepartment(DepartmentRequest $department): Department
     {
         try {
-            $response = $this->httpClient->post('/api/v2/departments', [
-                'body'    => $department->toJson(),
+            $responseJson = $this->httpClient->post('/api/v2/departments', [
+                'json' => $department->toArray(),
             ])->getBody()->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
-
-            if (!isset($convertedResponse->department)) {
-                throw new FreshserviceException('Wrong json response');
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->department)) {
+                throw new FreshserviceException('Department is missing in response');
             }
 
-            return Department::fillFromObject($convertedResponse->department);
+            return Department::fillFromObject($response->department);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $responseBody = $response->getBody()->getContents();
             throw new FreshserviceException($responseBody);
-        } catch (DepartmentRequestException | DepartmentException | \JsonException $e) {
+        } catch (DepartmentRequestException | DepartmentException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -181,31 +177,29 @@ class Freshservice
     public function getDepartments(int $page = 1): array
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments?page=$page")
+            $responseJson = $this->httpClient->get("/api/v2/departments?page=$page")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($convertedResponse->departments)) {
-                throw new FreshserviceException('Wrong json response');
+            if (!isset($response->departments)) {
+                throw new FreshserviceException('Departments are missing in response');
             }
 
             $departments = [];
-            foreach ($convertedResponse->departments as $department) {
+            foreach ($response->departments as $department) {
                 $departments[] = Department::fillFromObject($department);
             }
 
             return $departments;
         } catch (RequestException $e) {
-            $response = $e->getResponse();
-            $responseBody = $response->getBody()->getContents();
             if ($e->getCode() !== 404) {
                 throw new FreshserviceException($e->getMessage());
             }
 
             return [];
-        } catch (DepartmentException | \JsonException $e) {
+        } catch (DepartmentException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -216,24 +210,24 @@ class Freshservice
     public function getDepartmentById(int $departmentId): ?Department
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments/$departmentId")
+            $responseJson = $this->httpClient->get("/api/v2/departments/$departmentId")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($convertedResponse->department)) {
-                throw new FreshserviceException('Wrong json response');
+            if (!isset($response->department)) {
+                throw new FreshserviceException('Department is missing in response');
             }
 
-            return Department::fillFromObject($convertedResponse->department);
+            return Department::fillFromObject($response->department);
         } catch (RequestException $e) {
             if ($e->getCode() !== 404) {
                 throw new FreshserviceException($e->getMessage());
             }
 
             return null;
-        } catch (DepartmentException | \JsonException $e) {
+        } catch (DepartmentException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -244,28 +238,26 @@ class Freshservice
     public function getDepartmentByName(string $departmentName): ?Department
     {
         try {
-            $response = $this->httpClient->get("/api/v2/departments?query=\"name:'$departmentName'\"")
+            $responseJson = $this->httpClient->get("/api/v2/departments?query=\"name:'$departmentName'\"")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
-
-            if (!isset($convertedResponse->departments)) {
-                throw new FreshserviceException('Wrong json response');
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->departments)) {
+                throw new FreshserviceException('Departments are missing in response');
             }
-
-            if (empty($convertedResponse->departments[0])) {
+            if (empty($response->departments[0])) {
                 throw new FreshserviceException('Department not found');
             }
 
-            return Department::fillFromObject($convertedResponse->departments[0]);
+            return Department::fillFromObject($response->departments[0]);
         } catch (RequestException $e) {
             if ($e->getCode() !== 404) {
                 throw new FreshserviceException($e->getMessage());
             }
 
             return null;
-        } catch (DepartmentException | \JsonException $e) {
+        } catch (DepartmentException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -276,22 +268,22 @@ class Freshservice
     public function createRequester(RequesterRequest $requester): Requester
     {
         try {
-            $response = $this->httpClient->post('/api/v2/requesters', [
-                'body'    => $requester->toJson(),
+            $responseJson = $this->httpClient->post('/api/v2/requesters', [
+                'json' => $requester->toArray(),
             ])->getBody()->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($convertedResponse->requester)) {
-                throw new FreshserviceException('Wrong json response');
+            if (!isset($response->requester)) {
+                throw new FreshserviceException('Requester is missing in response');
             }
 
-            return Requester::fillFromObject($convertedResponse->requester);
+            return Requester::fillFromObject($response->requester);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $responseBody = $response->getBody()->getContents();
             throw new FreshserviceException($responseBody);
-        } catch (RequesterRequestExceptions | RequesterException | \JsonException $e) {
+        } catch (RequesterRequestExceptions | RequesterException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -302,22 +294,22 @@ class Freshservice
     public function updateRequester(int $requesterId, RequesterRequest $requester): Requester
     {
         try {
-            $response = $this->httpClient->put("/api/v2/requesters/$requesterId", [
-                'body'    => $requester->toJson(),
+            $responseJson = $this->httpClient->put("/api/v2/requesters/$requesterId", [
+                'json' => $requester->toArray(),
             ])->getBody()->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($convertedResponse->requester)) {
-                throw new FreshserviceException('Wrong json response');
+            if (!isset($response->requester)) {
+                throw new FreshserviceException('Requester is missing in response');
             }
 
-            return Requester::fillFromObject($convertedResponse->requester);
+            return Requester::fillFromObject($response->requester);
         } catch (RequestException $e) {
             $response = $e->getResponse();
             $responseBody = $response->getBody()->getContents();
             throw new FreshserviceException($responseBody);
-        } catch (RequesterRequestExceptions | RequesterException | \JsonException $e) {
+        } catch (RequesterRequestExceptions | RequesterException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }
@@ -328,28 +320,28 @@ class Freshservice
     public function getRequesterByEmail(string $requesterEmail): ?Requester
     {
         try {
-            $response = $this->httpClient->get("/api/v2/requesters?query=\"primary_email:'$requesterEmail'\"")
+            $responseJson = $this->httpClient->get("/api/v2/requesters?query=\"primary_email:'$requesterEmail'\"")
                 ->getBody()
                 ->getContents();
 
-            $convertedResponse = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($convertedResponse->requesters)) {
-                throw new FreshserviceException('Wrong json response');
+            if (!isset($response->requesters)) {
+                throw new FreshserviceException('Wrong JSON response');
             }
 
-            if (empty($convertedResponse->requesters[0])) {
+            if (empty($response->requesters[0])) {
                 throw new FreshserviceException('Requester not found');
             }
 
-            return Requester::fillFromObject($convertedResponse->requesters[0]);
+            return Requester::fillFromObject($response->requesters[0]);
         } catch (RequestException $e) {
             if ($e->getCode() !== 404) {
                 throw new FreshserviceException($e->getMessage());
             }
 
             return null;
-        } catch (RequesterException | \JsonException $e) {
+        } catch (RequesterException | JsonException $e) {
             throw new FreshserviceException($e->getMessage());
         }
     }

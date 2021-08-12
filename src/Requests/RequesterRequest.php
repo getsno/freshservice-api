@@ -137,13 +137,4 @@ class RequesterRequest
 
         return $requester;
     }
-
-    /**
-     * @throws RequesterRequestExceptions
-     * @throws \JsonException
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
-    }
 }

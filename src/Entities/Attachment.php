@@ -111,14 +111,6 @@ class Attachment
     }
 
     /**
-     * @throws \JsonException
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
-    }
-
-    /**
      * @throws AttachmentException
      */
     public static function fillFromObject($object): self

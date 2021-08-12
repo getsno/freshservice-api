@@ -2,6 +2,7 @@
 
 namespace Gets\Freshservice\Entities;
 
+use Exception;
 use Gets\Freshservice\Exceptions\TicketException;
 
 class Ticket
@@ -17,53 +18,16 @@ class Ticket
     public const SOURCE_TYPE_WALKUP = 9;
     public const SOURCE_TYPE_SLACK = 10;
 
-    public static function getAvailableSourceTypes(): array
-    {
-        return [
-            self::SOURCE_TYPE_EMAIL           => 'Email',
-            self::SOURCE_TYPE_PORTAL          => 'Portal',
-            self::SOURCE_TYPE_PHONE           => 'Phone',
-            self::SOURCE_TYPE_CHAT            => 'Chat',
-            self::SOURCE_TYPE_FEEDBACK_WIDGET => 'Feedback widget',
-            self::SOURCE_TYPE_YAMMER          => 'Yammer',
-            self::SOURCE_TYPE_AWS_CLOUDWATCH  => 'AWS Cloudwatch',
-            self::SOURCE_TYPE_PAGERDUTY       => 'Pagerduty',
-            self::SOURCE_TYPE_WALKUP          => 'Walkup',
-            self::SOURCE_TYPE_SLACK           => 'Slack',
-        ];
-    }
-
     public const STATUS_OPEN = 2;
     public const STATUS_PENDING = 3;
     public const STATUS_RESOLVED = 4;
     public const STATUS_CLOSED = 5;
-
-    public static function getAvailableStatuses(): array
-    {
-        return [
-            self::STATUS_OPEN     => 'Open',
-            self::STATUS_PENDING  => 'Pending',
-            self::STATUS_RESOLVED => 'Resolved',
-            self::STATUS_CLOSED   => 'Closed',
-        ];
-    }
 
     public const PRIORITY_LOW = 1;
     public const PRIORITY_MEDIUM = 2;
     public const PRIORITY_HIGH = 3;
     public const PRIORITY_URGENT = 4;
 
-    public static function getAvailablePriorities(): array
-    {
-        return [
-            self::PRIORITY_LOW    => 'Low',
-            self::PRIORITY_MEDIUM => 'Medium',
-            self::PRIORITY_HIGH   => 'High',
-            self::PRIORITY_URGENT => 'Urgent',
-        ];
-    }
-
-    // Unique ID of the ticket.
     private $id;
 
     /*
@@ -84,50 +48,20 @@ class Ticket
     * If the phone number is set and the email address is not, then the name attribute is mandatory.
     */
     private $phone;
-
-    // Status of the ticket.
     private $status;
-
-    // Priority of the ticket.
     private $priority;
-
-    // The channel through which the ticket was created. The default value is 2.
     private $source;
-
-    /*
-     * Helps categorize the ticket according to the different kinds of issues your support team deals with.
-     * The default Value is incident. * As of now, API v2 supports only type ‘incident’
-     */
     private $type;
-
-    // Subject of the ticket. The default value is null.
     private $subject;
-
-    // HTML content of the ticket.
     private $description;
-
-    // Content of the ticket in plain text.
     private $descriptionText;
-
-    // Department ID of the requester.
     private $departmentId;
-
-    //Key value pairs containing the names and values of custom fields.
     private $customFields = [];
-
-    /*
-     * Set to true if the ticket has been deleted/trashed.
-     * Deleted tickets will not be displayed in any views except the "deleted" filter.
-     */
     private $deleted = false;
-
-    // Ticket creation timestamp.
     private $createdAt;
-
-    // Ticket updated timestamp.
     private $updatedAt;
 
-    // Ticket attachments. The total size of these attachments cannot exceed 15 MB
+    // The total size of these attachments cannot exceed 15 MB
     private $attachments = [];
 
     private $conversations = [];
@@ -369,47 +303,6 @@ class Ticket
         return $this;
     }
 
-    public function toArray(): array
-    {
-        $ticket = [
-            'id'               => $this->getId(),
-            'requester_id'     => $this->getRequesterId(),
-            'email'            => $this->getEmail(),
-            'phone'            => $this->getPhone(),
-            'status'           => $this->getStatus(),
-            'priority'         => $this->getPriority(),
-            'source'           => $this->getSource(),
-            'type'             => $this->getType(),
-            'subject'          => $this->getSubject(),
-            'description'      => $this->getDescription(),
-            'description_text' => $this->getDescriptionText(),
-            'department_id'    => $this->getDepartmentId(),
-            'deleted'          => $this->isDeleted(),
-            'created_at'       => $this->getCreatedAt(),
-            'updated_at'       => $this->getUpdatedAt(),
-        ];
-
-        $ticket['attachments'] = [];
-        foreach ($this->getAttachments() as $attachment) {
-            $ticket['attachments'][] = $attachment->toArray();
-        }
-
-        $ticket['conversations'] = [];
-        foreach ($this->getConversations() as $conversation) {
-            $ticket['conversations'][] = $conversation->toArray();
-        }
-
-        return $ticket;
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
-    }
-
     /**
      * @throws TicketException
      */
@@ -446,8 +339,77 @@ class Ticket
             }
 
             return $ticket;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new TicketException($e->getMessage());
         }
+    }
+
+    public function toArray(): array
+    {
+        $ticket = [
+            'id'               => $this->getId(),
+            'requester_id'     => $this->getRequesterId(),
+            'email'            => $this->getEmail(),
+            'phone'            => $this->getPhone(),
+            'status'           => $this->getStatus(),
+            'priority'         => $this->getPriority(),
+            'source'           => $this->getSource(),
+            'type'             => $this->getType(),
+            'subject'          => $this->getSubject(),
+            'description'      => $this->getDescription(),
+            'description_text' => $this->getDescriptionText(),
+            'department_id'    => $this->getDepartmentId(),
+            'deleted'          => $this->isDeleted(),
+            'created_at'       => $this->getCreatedAt(),
+            'updated_at'       => $this->getUpdatedAt(),
+        ];
+
+        $ticket['attachments'] = [];
+        foreach ($this->getAttachments() as $attachment) {
+            $ticket['attachments'][] = $attachment->toArray();
+        }
+
+        $ticket['conversations'] = [];
+        foreach ($this->getConversations() as $conversation) {
+            $ticket['conversations'][] = $conversation->toArray();
+        }
+
+        return $ticket;
+    }
+
+    public static function getAvailableSourceTypes(): array
+    {
+        return [
+            self::SOURCE_TYPE_EMAIL           => 'Email',
+            self::SOURCE_TYPE_PORTAL          => 'Portal',
+            self::SOURCE_TYPE_PHONE           => 'Phone',
+            self::SOURCE_TYPE_CHAT            => 'Chat',
+            self::SOURCE_TYPE_FEEDBACK_WIDGET => 'Feedback widget',
+            self::SOURCE_TYPE_YAMMER          => 'Yammer',
+            self::SOURCE_TYPE_AWS_CLOUDWATCH  => 'AWS Cloudwatch',
+            self::SOURCE_TYPE_PAGERDUTY       => 'Pagerduty',
+            self::SOURCE_TYPE_WALKUP          => 'Walkup',
+            self::SOURCE_TYPE_SLACK           => 'Slack',
+        ];
+    }
+
+    public static function getAvailableStatuses(): array
+    {
+        return [
+            self::STATUS_OPEN     => 'Open',
+            self::STATUS_PENDING  => 'Pending',
+            self::STATUS_RESOLVED => 'Resolved',
+            self::STATUS_CLOSED   => 'Closed',
+        ];
+    }
+
+    public static function getAvailablePriorities(): array
+    {
+        return [
+            self::PRIORITY_LOW    => 'Low',
+            self::PRIORITY_MEDIUM => 'Medium',
+            self::PRIORITY_HIGH   => 'High',
+            self::PRIORITY_URGENT => 'Urgent',
+        ];
     }
 }

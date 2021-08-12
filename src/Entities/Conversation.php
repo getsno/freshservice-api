@@ -132,14 +132,6 @@ class Conversation
     }
 
     /**
-     * @throws \JsonException
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->toArray(),  JSON_THROW_ON_ERROR);
-    }
-
-    /**
      * @throws ConversationException
      */
     public static function fillFromObject($object): self
