@@ -233,6 +233,7 @@ class TicketRequest
             'source'        => $this->getSource(),
             'subject'       => $this->getSubject(),
             'description'   => $this->getDescription(),
+            'urgency'       => $this->getUrgency(),
         ];
 
         if ($this->getRequesterId() !== null) {
