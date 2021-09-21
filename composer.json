@@ -27,7 +27,7 @@
             "Gets\\Freshservice\\": "src/"
         },
         "files": [
-            "./src/Helpers/Helpers.php"
+            "./src/Helpers.php"
         ]
     }
 }

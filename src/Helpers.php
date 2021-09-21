@@ -11,8 +11,10 @@ function t($key = null)
     $translations = [];
     $locale = env('LOCALE', 'en');
 
-    if (file_exists("./resources/lang/{$locale}.php")) {
-        $translations = require "./resources/lang/{$locale}.php";
+    $translationsPath = __DIR__ . "/resources/lang/{$locale}.php";
+
+    if (file_exists($translationsPath)) {
+        $translations = require $translationsPath;
     }
 
     return $translations[$key] ?? $key;
