@@ -33,6 +33,8 @@ class TicketRequest
     // The total size of these attachments cannot exceed 15 MB.
     private $attachments = [];
 
+    private $customFields = [];
+
     public function getRequesterId(): ?int
     {
         return $this->requesterId;
@@ -91,6 +93,11 @@ class TicketRequest
     public function getAttachments(): array
     {
         return $this->attachments;
+    }
+
+    public function getCustomFields(): array
+    {
+        return $this->customFields;
     }
 
     public function setRequesterId(?int $requesterId): self
@@ -203,6 +210,13 @@ class TicketRequest
         return count($this->attachments) > 0;
     }
 
+    public function setCustomFields(array $customFields): self
+    {
+        $this->customFields = $customFields;
+
+        return $this;
+    }
+
     /**
      * @throws TicketRequestException
      */
@@ -242,6 +256,10 @@ class TicketRequest
 
         if ($this->getDepartmentId() !== null) {
             $requester['department_id'] = $this->getDepartmentId();
+        }
+
+        if (count($this->getCustomFields()) > 0) {
+            $requester['custom_fields'] = $this->getCustomFields();
         }
 
         return $requester;
