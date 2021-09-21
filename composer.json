@@ -1,7 +1,7 @@
 {
     "name": "getsno/freshservice-api",
     "description": "API client for freshservice.com",
-    "version": "1.1",
+    "version": "1.2",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -25,6 +25,9 @@
     "autoload":  {
         "psr-4": {
             "Gets\\Freshservice\\": "src/"
-        }
+        },
+        "files": [
+            "./src/Helpers/Helpers.php"
+        ]
     }
 }

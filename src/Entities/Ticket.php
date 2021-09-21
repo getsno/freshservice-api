@@ -5,6 +5,8 @@ namespace Gets\Freshservice\Entities;
 use Exception;
 use Gets\Freshservice\Exceptions\TicketException;
 
+use function Gets\Freshservice\Helpers\t;
+
 class Ticket
 {
     public const SOURCE_TYPE_EMAIL = 1;
@@ -380,36 +382,36 @@ class Ticket
     public static function getAvailableSourceTypes(): array
     {
         return [
-            self::SOURCE_TYPE_EMAIL           => 'Email',
-            self::SOURCE_TYPE_PORTAL          => 'Portal',
-            self::SOURCE_TYPE_PHONE           => 'Phone',
-            self::SOURCE_TYPE_CHAT            => 'Chat',
-            self::SOURCE_TYPE_FEEDBACK_WIDGET => 'Feedback widget',
-            self::SOURCE_TYPE_YAMMER          => 'Yammer',
-            self::SOURCE_TYPE_AWS_CLOUDWATCH  => 'AWS Cloudwatch',
-            self::SOURCE_TYPE_PAGERDUTY       => 'Pagerduty',
-            self::SOURCE_TYPE_WALKUP          => 'Walkup',
-            self::SOURCE_TYPE_SLACK           => 'Slack',
+            self::SOURCE_TYPE_EMAIL           => t('Email'),
+            self::SOURCE_TYPE_PORTAL          => t('Portal'),
+            self::SOURCE_TYPE_PHONE           => t('Phone'),
+            self::SOURCE_TYPE_CHAT            => t('Chat'),
+            self::SOURCE_TYPE_FEEDBACK_WIDGET => t('Feedback widget'),
+            self::SOURCE_TYPE_YAMMER          => t('Yammer'),
+            self::SOURCE_TYPE_AWS_CLOUDWATCH  => t('AWS Cloudwatch'),
+            self::SOURCE_TYPE_PAGERDUTY       => t('Pagerduty'),
+            self::SOURCE_TYPE_WALKUP          => t('Walkup'),
+            self::SOURCE_TYPE_SLACK           => t('Slack'),
         ];
     }
 
     public static function getAvailableStatuses(): array
     {
         return [
-            self::STATUS_OPEN     => 'Open',
-            self::STATUS_PENDING  => 'Pending',
-            self::STATUS_RESOLVED => 'Resolved',
-            self::STATUS_CLOSED   => 'Closed',
+            self::STATUS_OPEN     => t('Open'),
+            self::STATUS_PENDING  => t('Pending'),
+            self::STATUS_RESOLVED => t('Resolved'),
+            self::STATUS_CLOSED   => t('Closed'),
         ];
     }
 
     public static function getAvailablePriorities(): array
     {
         return [
-            self::PRIORITY_LOW    => 'Low',
-            self::PRIORITY_MEDIUM => 'Medium',
-            self::PRIORITY_HIGH   => 'High',
-            self::PRIORITY_URGENT => 'Urgent',
+            self::PRIORITY_LOW    => t('Low'),
+            self::PRIORITY_MEDIUM => t('Medium'),
+            self::PRIORITY_HIGH   => t('High'),
+            self::PRIORITY_URGENT => t('Urgent'),
         ];
     }
 }
