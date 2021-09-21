@@ -88,6 +88,35 @@ class Freshservice
     /**
      * @throws FreshserviceException
      */
+    public function getTicketFields(): ?array
+    {
+        try {
+            $responseJson = $this->httpClient->get("/api/v2/ticket_fields")
+                ->getBody()
+                ->getContents();
+
+            $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR);
+            if (!isset($response->ticket_fields)) {
+                throw new FreshserviceException('Wrong JSON response');
+            }
+
+            return $response->ticket_fields;
+        } catch (RequestException $e) {
+            if ($e->getCode() !== 404) {
+                $response = $e->getResponse();
+                $responseBody = $response->getBody()->getContents();
+                throw new FreshserviceException($responseBody);
+            }
+
+            return null;
+        } catch (TicketException | JsonException $e) {
+            throw new FreshserviceException($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws FreshserviceException
+     */
     public function getTicketById(int $ticketId): ?Ticket
     {
         try {

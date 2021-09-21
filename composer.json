@@ -1,7 +1,7 @@
 {
     "name": "getsno/freshservice-api",
     "description": "API client for freshservice.com",
-    "version": "1.0",
+    "version": "1.1",
     "type": "library",
     "license": "MIT",
     "authors": [
