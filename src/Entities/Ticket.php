@@ -5,6 +5,8 @@ namespace Gets\Freshservice\Entities;
 use Exception;
 use Gets\Freshservice\Exceptions\TicketException;
 
+use function Gets\Freshservice\Helpers\t;
+
 class Ticket
 {
     public const SOURCE_TYPE_EMAIL = 1;
