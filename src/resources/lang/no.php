@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'Email' => 'Email',
+    'Email' => 'E-post',
     'Portal' => 'Portal',
-    'Phone' => 'Phone',
+    'Phone' => 'Telefon',
     'Chat' => 'Chat',
     'Feedback widget' => 'Feedback widget',
     'Yammer' => 'Yammer',
@@ -11,12 +11,12 @@ return [
     'Pagerduty' => 'Pagerduty',
     'Walkup' => 'Walkup',
     'Slack' => 'Slack',
-    'Open' => 'Open',
-    'Pending' => 'Pending',
-    'Resolved' => 'Resolved',
-    'Closed' => 'Closed',
-    'Low' => 'Low',
+    'Open' => 'Åpen',
+    'Pending' => 'Pågår',
+    'Resolved' => 'Løst',
+    'Closed' => 'Lukket',
+    'Low' => 'Lav',
     'Medium' => 'Medium',
-    'High' => 'High',
-    'Urgent' => 'Urgent',
+    'High' => 'Høy',
+    'Urgent' => 'Haster',
 ];
