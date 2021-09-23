@@ -45,10 +45,19 @@ class Freshservice
             if ($ticket->hasAttachments()) {
                 $multipart = [];
                 foreach ($ticket->toArray() as $key => $value) {
-                    $multipart[] = [
-                        'name'     => $key,
-                        'contents' => $value,
-                    ];
+                    if ($key === 'custom_fields') {
+                        foreach ($value as $custom_field_key => $custom_field_value) {
+                            $multipart[] = [
+                                'name' => "{$key}[{$custom_field_key}]",
+                                'contents' => $custom_field_value,
+                            ];
+                        }
+                    } else {
+                        $multipart[] = [
+                            'name'     => $key,
+                            'contents' => $value,
+                        ];
+                    }
                 }
                 foreach ($ticket->getAttachments() as $attachment) {
                     $multipart[] = [
