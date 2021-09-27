@@ -34,7 +34,7 @@ class RequesterRequest
         return $this->primaryEmail;
     }
 
-    public function getWorkPhoneNumber(): ?int
+    public function getWorkPhoneNumber(): ?string
     {
         return $this->workPhoneNumber;
     }
@@ -44,7 +44,7 @@ class RequesterRequest
         return $this->departmentIds;
     }
 
-    public function getMobilePhoneNumber(): ?int
+    public function getMobilePhoneNumber(): ?string
     {
         return $this->mobilePhoneNumber;
     }
@@ -77,14 +77,14 @@ class RequesterRequest
         return $this;
     }
 
-    public function setWorkPhoneNumber(?int $workPhoneNumber): self
+    public function setWorkPhoneNumber(?string $workPhoneNumber): self
     {
         $this->workPhoneNumber = $workPhoneNumber;
 
         return $this;
     }
 
-    public function setMobilePhoneNumber(?int $mobilePhoneNumber): self
+    public function setMobilePhoneNumber(?string $mobilePhoneNumber): self
     {
         $this->mobilePhoneNumber = $mobilePhoneNumber;
 
