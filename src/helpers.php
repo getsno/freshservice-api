@@ -2,21 +2,18 @@
 
 namespace Gets\Freshservice\Helpers;
 
-function t($key = null)
+/*
+ * Translates the given language line using localization files
+ */
+function t(string $key)
 {
-    if (is_null($key)) {
-        return $key;
-    }
-
     $translations = [];
-    $locale = env('LOCALE', 'en');
 
-    $translationsPath = __DIR__ . "/resources/lang/{$locale}.php";
-
+    $locale = env('FRESHSERVICE_LOCALE', 'en');
+    $translationsPath = __DIR__ . "/resources/lang/$locale.php";
     if (file_exists($translationsPath)) {
         $translations = require $translationsPath;
     }
 
     return $translations[$key] ?? $key;
 }
-
