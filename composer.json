@@ -20,6 +20,7 @@
     "require": {
     	"php": ">=7.3",
         "guzzlehttp/guzzle": "~6.0",
+        "vlucas/phpdotenv": "5.3.x-dev",
         "ext-json": "*"
     },
     "autoload":  {
@@ -27,7 +28,7 @@
             "Gets\\Freshservice\\": "src/"
         },
         "files": [
-            "./src/Helpers.php"
+            "./src/helpers.php"
         ]
     }
 }
