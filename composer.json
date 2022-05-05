@@ -20,7 +20,7 @@
     "require": {
     	"php": ">=7.3",
         "guzzlehttp/guzzle": "~7.0",
-        "vlucas/phpdotenv": "5.3.x-dev",
+        "vlucas/phpdotenv": "^5.4",
         "ext-json": "*"
     },
     "autoload":  {
