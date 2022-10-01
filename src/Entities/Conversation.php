@@ -45,7 +45,7 @@ class Conversation
         return $this->userId;
     }
 
-    public function getFromEmail(): string
+    public function getFromEmail(): ?string
     {
         return $this->fromEmail;
     }
@@ -69,7 +69,7 @@ class Conversation
         return $this;
     }
 
-    public function setBodyText(string $bodyText): self
+    public function setBodyText(?string $bodyText): self
     {
         $this->bodyText = $bodyText;
 
