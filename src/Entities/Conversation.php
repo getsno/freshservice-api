@@ -45,7 +45,7 @@ class Conversation
         return $this->userId;
     }
 
-    public function getFromEmail(): string
+    public function getFromEmail(): ?string
     {
         return $this->fromEmail;
     }
@@ -97,7 +97,7 @@ class Conversation
         return $this;
     }
 
-    public function setFromEmail(string $fromEmail): self
+    public function setFromEmail(?string $fromEmail): self
     {
         $this->fromEmail = $fromEmail;
 
